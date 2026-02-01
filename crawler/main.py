@@ -4,11 +4,12 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
-from config import DOPT_LIST_URL, STATE_SOURCE_URLS
+from config import DOPT_LIST_URL, DOPT_PDF_URLS, STATE_SOURCE_URLS
 from db import get_engine, record_ingest, record_posting, upsert_officer
-from fetcher import fetch_url
+from fetcher import fetch_bytes, fetch_url
 from normalize import normalize_officer
 from parser_dopt import parse_dopt_list
+from parser_pdf import parse_dopt_pdf
 from parser_state import parse_state_list
 
 
@@ -71,6 +72,34 @@ def crawl_state_sources(session: Session, urls: list[str]) -> int:
     return count
 
 
+def crawl_dopt_pdfs(session: Session, urls: list[str]) -> int:
+    count = 0
+    for url in urls:
+        pdf_bytes = fetch_bytes(url)
+        payload_hash = hashlib.sha256(pdf_bytes).hexdigest()
+        record_ingest(session, url, "dopt_pdf", payload_hash)
+        raw_records = parse_dopt_pdf(pdf_bytes, url)
+        for raw in raw_records:
+            normalized = normalize_officer(raw)
+            if not normalized["full_name"]:
+                continue
+            officer = upsert_officer(session, normalized)
+            if normalized.get("current_posting"):
+                record_posting(
+                    session,
+                    officer.id,
+                    {
+                        "organization": normalized.get("current_posting"),
+                        "role_title": None,
+                        "location": None,
+                        "source_url": normalized.get("source_url"),
+                        "is_current": True,
+                    },
+                )
+            count += 1
+    return count
+
+
 def main() -> None:
     load_dotenv()
     database_url = os.getenv("DATABASE_URL")
@@ -84,6 +113,11 @@ def main() -> None:
             count += crawl_dopt_list(session)
         except Exception as exc:  # noqa: BLE001
             print(f"Failed to crawl DoPT list: {exc}")
+        if DOPT_PDF_URLS:
+            try:
+                count += crawl_dopt_pdfs(session, DOPT_PDF_URLS)
+            except Exception as exc:  # noqa: BLE001
+                print(f"Failed to crawl DoPT PDFs: {exc}")
         if STATE_SOURCE_URLS:
             count += crawl_state_sources(session, STATE_SOURCE_URLS)
         session.commit()

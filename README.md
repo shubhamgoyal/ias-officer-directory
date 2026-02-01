@@ -27,6 +27,7 @@ Copy `.env.example` to `.env` and fill in values.
 ## Additional sources
 Add state cadre sources via `STATE_SOURCE_URLS` (comma-separated).
 The crawler will ingest each source and store posting history when available.
+Add DoPT PDF sources via `DOPT_PDF_URLS` (comma-separated).
 
 ## AWS (serverless)
 See `infra/README.md` and `infra/sam/template.yaml` for a starter SAM stack with:

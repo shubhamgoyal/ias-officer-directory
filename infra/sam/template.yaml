@@ -12,6 +12,9 @@ Parameters:
   StateSourceUrls:
     Type: String
     Default: ""
+  DoptPdfUrls:
+    Type: String
+    Default: ""
   VpcSubnetIds:
     Type: CommaDelimitedList
     Description: Subnet IDs for Lambda VPC config
@@ -58,6 +61,7 @@ Resources:
           DATABASE_URL: !Ref DatabaseUrl
           CRAWLER_USER_AGENT: !Ref CrawlerUserAgent
           STATE_SOURCE_URLS: !Ref StateSourceUrls
+          DOPT_PDF_URLS: !Ref DoptPdfUrls
       Events:
         MonthlySchedule:
           Type: Schedule
