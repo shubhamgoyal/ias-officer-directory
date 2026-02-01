@@ -4,12 +4,12 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
-from .config import DOPT_LIST_URL, STATE_SOURCE_URLS
-from .db import get_engine, record_ingest, record_posting, upsert_officer
-from .fetcher import fetch_url
-from .normalize import normalize_officer
-from .parser_dopt import parse_dopt_list
-from .parser_state import parse_state_list
+from config import DOPT_LIST_URL, STATE_SOURCE_URLS
+from db import get_engine, record_ingest, record_posting, upsert_officer
+from fetcher import fetch_url
+from normalize import normalize_officer
+from parser_dopt import parse_dopt_list
+from parser_state import parse_state_list
 
 
 def crawl_dopt_list(session: Session) -> int:

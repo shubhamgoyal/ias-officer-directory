@@ -1,4 +1,4 @@
-from .parser_table import parse_table_records
+from parser_table import parse_table_records
 
 
 def _split_postings(value: str) -> list[str]:

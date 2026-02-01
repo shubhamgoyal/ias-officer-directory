@@ -1,4 +1,4 @@
-from .parser_table import parse_table_records
+from parser_table import parse_table_records
 
 
 def parse_dopt_list(html: str, source_url: str) -> list[dict]:

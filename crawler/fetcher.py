@@ -1,7 +1,7 @@
 import time
 import requests
 
-from .config import REQUEST_TIMEOUT, RETRIES, USER_AGENT
+from config import REQUEST_TIMEOUT, RETRIES, USER_AGENT
 
 
 def fetch_url(url: str) -> str:
