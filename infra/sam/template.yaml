@@ -14,12 +14,33 @@ Resources:
     Properties:
       CodeUri: ../../api
       Handler: app.main.handler
+      Environment:
+        Variables:
+          DATABASE_URL: "CHANGE_ME"
       Events:
         Api:
           Type: Api
           Properties:
             Path: /{proxy+}
             Method: ANY
+
+  CrawlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../../crawler
+      Handler: handler.handler
+      Timeout: 300
+      MemorySize: 1024
+      Environment:
+        Variables:
+          DATABASE_URL: "CHANGE_ME"
+          CRAWLER_USER_AGENT: "ias-directory-crawler/1.0 (+contact@example.com)"
+          STATE_SOURCE_URLS: ""
+      Events:
+        MonthlySchedule:
+          Type: Schedule
+          Properties:
+            Schedule: "cron(0 6 1 * ? *)"
 
 Outputs:
   ApiUrl:

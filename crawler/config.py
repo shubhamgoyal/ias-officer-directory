@@ -8,3 +8,9 @@ USER_AGENT = os.getenv(
 )
 REQUEST_TIMEOUT = int(os.getenv("CRAWLER_REQUEST_TIMEOUT", "30"))
 RETRIES = int(os.getenv("CRAWLER_RETRIES", "3"))
+
+STATE_SOURCE_URLS = [
+    value.strip()
+    for value in os.getenv("STATE_SOURCE_URLS", "").split(",")
+    if value.strip()
+]

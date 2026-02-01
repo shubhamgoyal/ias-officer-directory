@@ -11,6 +11,7 @@
 2. Package and deploy:
    - `sam build`
    - `sam deploy --guided`
+3. Update the stack parameters/environment variables for `DATABASE_URL` and `STATE_SOURCE_URLS`.
 
 ## Frontend (S3 + CloudFront)
 1. Build web app: `npm run build`
@@ -19,3 +20,4 @@
 
 ## Scheduler
 Use EventBridge rule to invoke the crawler Lambda monthly.
+The default cron in `infra/sam/template.yaml` runs on the 1st of each month at 06:00 UTC.
