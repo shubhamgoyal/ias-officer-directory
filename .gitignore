@@ -12,3 +12,8 @@ dist/
 build/
 .idea/
 .vscode/
+.docker/
+.home/
+.tools/
+aws-sam-cli-macos-arm64.pkg
+infra/sam/.aws-sam/

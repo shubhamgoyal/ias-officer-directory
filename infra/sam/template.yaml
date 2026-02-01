@@ -2,11 +2,33 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: IAS Officer Directory API
 
+Parameters:
+  DatabaseUrl:
+    Type: String
+    Description: SQLAlchemy database URL
+  CrawlerUserAgent:
+    Type: String
+    Default: "ias-directory-crawler/1.0 (+contact@example.com)"
+  StateSourceUrls:
+    Type: String
+    Default: ""
+  VpcSubnetIds:
+    Type: CommaDelimitedList
+    Description: Subnet IDs for Lambda VPC config
+  VpcSecurityGroupIds:
+    Type: CommaDelimitedList
+    Description: Security group IDs for Lambda VPC config
+
 Globals:
   Function:
     Runtime: python3.11
     Timeout: 30
     MemorySize: 512
+    Architectures:
+      - arm64
+    VpcConfig:
+      SecurityGroupIds: !Ref VpcSecurityGroupIds
+      SubnetIds: !Ref VpcSubnetIds
 
 Resources:
   ApiFunction:
@@ -16,7 +38,7 @@ Resources:
       Handler: app.main.handler
       Environment:
         Variables:
-          DATABASE_URL: "CHANGE_ME"
+          DATABASE_URL: !Ref DatabaseUrl
       Events:
         Api:
           Type: Api
@@ -33,9 +55,9 @@ Resources:
       MemorySize: 1024
       Environment:
         Variables:
-          DATABASE_URL: "CHANGE_ME"
-          CRAWLER_USER_AGENT: "ias-directory-crawler/1.0 (+contact@example.com)"
-          STATE_SOURCE_URLS: ""
+          DATABASE_URL: !Ref DatabaseUrl
+          CRAWLER_USER_AGENT: !Ref CrawlerUserAgent
+          STATE_SOURCE_URLS: !Ref StateSourceUrls
       Events:
         MonthlySchedule:
           Type: Schedule
