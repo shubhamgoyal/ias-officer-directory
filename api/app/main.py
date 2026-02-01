@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import Depends, FastAPI, Query, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -9,6 +10,12 @@ from .db import get_db
 from .schemas import OfficerBase, OfficerDetail, PostingOut
 
 app = FastAPI(title="IAS Officer Directory API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 handler = Mangum(app)
 
 
