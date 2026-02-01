@@ -79,7 +79,11 @@ def main() -> None:
 
     engine = get_engine(database_url)
     with Session(engine) as session:
-        count = crawl_dopt_list(session)
+        count = 0
+        try:
+            count += crawl_dopt_list(session)
+        except Exception as exc:  # noqa: BLE001
+            print(f"Failed to crawl DoPT list: {exc}")
         if STATE_SOURCE_URLS:
             count += crawl_state_sources(session, STATE_SOURCE_URLS)
         session.commit()
