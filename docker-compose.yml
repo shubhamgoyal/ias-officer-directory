@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ias_directory
+      POSTGRES_USER: ias_user
+      POSTGRES_PASSWORD: ias_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+
+  api:
+    build:
+      context: ./api
+    environment:
+      DATABASE_URL: postgresql+psycopg2://ias_user:ias_password@db:5432/ias_directory
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ./web
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  db_data:

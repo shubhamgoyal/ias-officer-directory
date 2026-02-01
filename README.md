@@ -16,6 +16,11 @@ stores longitudinal posting history, and provides fast search with profile views
 4. API: `uvicorn api.app.main:app --reload`
 5. Web: `npm install && npm run dev` (from `web/`)
 
+## Quick start (Docker)
+1. Run: `docker compose up --build`
+2. Open `http://localhost:5173`
+3. Use the seeded "Sample Officer" to verify the UI.
+
 ## Environment
 Copy `.env.example` to `.env` and fill in values.
 
