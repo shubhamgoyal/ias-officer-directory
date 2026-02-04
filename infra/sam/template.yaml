@@ -15,12 +15,6 @@ Parameters:
   DoptPdfUrls:
     Type: String
     Default: ""
-  VpcSubnetIds:
-    Type: CommaDelimitedList
-    Description: Subnet IDs for Lambda VPC config
-  VpcSecurityGroupIds:
-    Type: CommaDelimitedList
-    Description: Security group IDs for Lambda VPC config
 
 Globals:
   Function:
@@ -29,9 +23,6 @@ Globals:
     MemorySize: 512
     Architectures:
       - arm64
-    VpcConfig:
-      SecurityGroupIds: !Ref VpcSecurityGroupIds
-      SubnetIds: !Ref VpcSubnetIds
 
 Resources:
   ApiFunction:
